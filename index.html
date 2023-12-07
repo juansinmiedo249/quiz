@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Armotizacion</title>
+</head>
+<body>
+    <header>
+        <div>
+            <h1>Armotizacion simple</h1>
+        </div>
+        <div>
+            <button onclick="crearMonto()">Monto Credito</button>
+            <button onclick="crearInteres()">Interes (anual)</button>
+            <button onclick="crearPagos()">Cuotas</button>
+            <button onclick="calcularArmonizado()">Calcular</button>
+        </div>
+        
+        
+    </header>
+
+    <main>
+        <div class="tableInput">
+            <table border="1">
+                <tr>
+                    <th>Monto del credito:</th>
+                    <th id="monto"></th>
+                </tr>
+                <tr>
+                    <th>Pago Interes (anual):</th>
+                    <th id="interes"></th>
+                </tr>
+                <tr>
+                    <th>Numero de pagos (Mensuales):</th>
+                    <th id="pagos"></th>
+                </tr>
+                <tr>
+                    <th>Valor total:</th>
+                    <th id="vTotal"></th>
+                </tr>
+                <tr>
+                    <th>Valor Mensual</th>
+                    <th id="vMensual"></th>
+                </tr>
+            </table>
+        </div>
+        <br><br><br>
+
+        <div  class="tableArmonizadas">
+            <table >
+                <thead>
+                    <tr>
+                        <th>mes</th>
+                        <th>Valor</tr>
+                        <th>Valor Total</tr>
+                        <th>Capital</tr>
+                        <t>Interes</tr>
+                        <tr>Total</tr>
+                    </tr>
+                </thead>
+                <tbody id="tableoutput">
+    
+                </tbody>
+            </table>
+            
+        </div>
+    </main>
+
+    <script>
+
+        const mapArmonizado = new Map();
+        let pagos = 0;
+        let monto = 0;
+        let interes = 0;
+        let valorTotal = 0;
+        let valorMensual = 0;
+
+        function addPagos(pagos){
+            pagos = Number(prompt("Ingrese numero de pagos en meses:"));
+            document.getElementById("pagos").innerHTML = pagos;
+            return  pagos;
+        }
+
+        function crearPagos(){
+            pagos = addPagos(pagos);
+        }
+
+        function addMonto(monto){
+            monto = Number(prompt("Ingrese el monto:"));
+            document.getElementById("monto").innerHTML = monto;
+            return monto;
+        }
+
+        function crearMonto(){
+            monto = addMonto(monto);
+
+        }
+
+        function addInteres(interes){
+            interes = Number(prompt("Ingrese la tasa de interes anual:"));
+            let inter = interes+"%"
+            document.getElementById("interes").innerHTML = inter;
+            return interes
+        }
+
+        function crearInteres(){
+            interes = addInteres(interes);
+        }
+
+        
+        
+        function calculo(){
+
+            valorTotal = monto + (monto*(interes/100));
+            valorMensual = valorTotal/pagos;
+            
+            
+
+
+            document.getElementById("vTotal").innerHTML = valorTotal;
+            document.getElementById("vMensual").innerHTML = valorMensual
+
+            llenarMap(mapArmonizado,pagos,monto,interes,valorTotal,valorMensual);
+
+        }
+
+        function calcularArmonizado(){
+           
+            calculo(mapArmonizado,pagos,monto,interes);
+            
+
+        }
+
+        function llenarMap(mapArmonizado,pagos,monto,interes,valorTotal,valorMensual){
+            let interesMensual = (valorTotal - monto)/pagos;
+            let capital = valorMensual - interesMensual;
+            for (let i=0;i<pagos;i++){
+                let mes = i+1;
+
+                const listArm = [];
+
+                listArm.push(mes);
+                listArm.push(monto);
+                listArm.push(valorTotal);
+                listArm.push(capital);
+                listArm.push(interesMensual);
+                listArm.push(valorMensual);
+
+                /* map.set("mes",mes);
+                map.set("valor",monto);
+                map.set("vTotal",valorTotal);
+                map.set("capital",capital);
+                map.set("interes",interesMensual);
+                map.set("total",valorMensual);
+ */
+                monto -= capital;
+                valorTotal -=  valorMensual
+                mapArmonizado.set(mes,listArm)
+            }
+
+            console.log(mapArmonizado);
+
+            mostrarArmoni(mapArmonizado)
+
+
+        }
+
+        function mostrarArmoni(mapArmonizado){
+
+            let table = "";
+            mapArmonizado.forEach((v,k)=>{
+                table += `<tr>`
+                for (let i = 0;i<v.length;i++ ){
+                    console.log("aca toy")
+                    table += `<th>${v[i]}</th>`
+                }
+                table += `<tr>`
+            })
+            console.log(table)
+            document.getElementById("tableoutput").innerHTML = table
+            
+        }
+    
+
+    </script>
+
+    
+
+</body>
+</html>
