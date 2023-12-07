@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Gestor de Facturas</title>
+</head>
+<body>
+
+    <h1>GESTOR DE FACTURAS</h1>
+    <br><br><br>
+    <button onclick="agregarFactura()">Agregar</button>
+    <button onclick="pagarFactura()">Pagar</button>
+    <p class="cont">Total de Facturas <p id="countFact" border="1">0</p></p>
+    <br><br><br>
+
+    <div>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Facturas pendientes</th>
+                </tr>
+            </thead>
+            <tr>
+                <th >Numero</th>
+                <th >Coste</th>
+            </tr>
+            <tbody id="pendientes">
+                
+                
+            </tbody>
+        </table>
+
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Facturas pagadas</th>
+                </tr>
+            </thead>
+            <tr>
+                <th >Numero</th>
+                <th >Coste</th>
+            </tr>
+            <tbody id="pagas">
+                
+                
+            </tbody>
+        </table>
+    </div>
+    <script>
+
+        const mapFac = new Map();
+        let numeroFactura = 1;
+        const mapFacPag = new Map;
+        let totalFac = 0;
+        function addFactura(numFact, mapFac) {
+            let coste = Number(prompt("Ingrese el valor de la factura"));
+            mapFac.set(numFact,coste)            
+            factPend(mapFac)
+
+            return true
+        }
+        
+
+        function agregarFactura(){
+            document.getElementById("countFact").innerHTML = numeroFactura;
+            numeroFactura += addFactura(numeroFactura, mapFac) ? 1 : 0;
+            
+
+            
+        }
+
+        function clearFactura(mapFac,mapFacPag){
+            let facturaPagar = Number(prompt("Ingrese el numero de factura a pagar"));
+            mapFacPag.set(facturaPagar,mapFac.get(facturaPagar));
+            mapFac.delete(facturaPagar)
+            console.log(mapFac)
+            
+            facPagas(mapFacPag);
+            factPend(mapFac);
+            
+        }
+
+        function pagarFactura(){
+            clearFactura(mapFac,mapFacPag);
+
+        }
+
+        function facPagas(mapFacPag){
+            let table = "";
+            console.log("xdxd");
+            console.log(mapFacPag);
+            mapFacPag.forEach((v,k) =>{
+                table += `<tr><th>${k}</th><th>${v}</th></tr>` 
+            })
+            document.getElementById("pagas").innerHTML = table;
+        }
+
+        function factPend(mapFac){
+            let table = "";            
+            mapFac.forEach((v,k)=>{                
+                table += `<tr><th>${k}</th><th>${v}</th></tr>`               
+
+            })
+            document.getElementById("pendientes").innerHTML = table;
+
+        }
+       
+        
+        
+
+        
+    </script>
+</body>
+</html>
